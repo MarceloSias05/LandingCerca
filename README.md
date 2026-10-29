@@ -1,32 +1,12 @@
-# React + TypeScript + Vite
+# Landing de CERCA · lista de espera
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Vite, GSAP 3.15 (ScrollTrigger). `npm run dev` · `npm run build` · `npm run preview`.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- **Nombre provisional:** `src/brand.ts` (también actualiza el `<title>` y los metadatos).
+- **Textos y datos de demostración:** `src/content.ts`. Ilustraciones provisionales: `src/components/Art.tsx`;
+  para usar fotos reales, añade `image` a cada momento en `content.ts`.
+- **Jotform:** `src/config.ts` (app "Cerca Wishlist"). Para cambiarla sin tocar código, `VITE_JOTFORM_URL` en `.env`.
+- **Inscripciones confirmadas:** en Jotform, redirige la página de agradecimiento a
+  `https://<tu-dominio>/?registro=confirmado`. Solo esa redirección dispara `waitlist_signup_confirmed`;
+  los clics se registran aparte como `waitlist_cta_click` (ver `src/analytics.ts`, se envían a `window.dataLayer`).
+- **El hilo:** `src/components/Thread.tsx` recorre los elementos `data-anchor` en orden y termina en `[data-x-mark]`.
