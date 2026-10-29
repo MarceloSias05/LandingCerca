@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { track } from '../analytics'
-import { DISTANCE, MOMENTS, PEOPLE, type Moment } from '../content'
+import { DISTANCE, MOMENTS, type Moment } from '../content'
+import { useCopy } from '../i18n'
 import { Postmark } from './Postmark'
 import { Stamp } from './Stamp'
 
 type View = 'momentos' | 'mapa'
-const VIEWS: { id: View; label: string }[] = [
-  { id: 'momentos', label: 'Momentos' },
-  { id: 'mapa', label: 'Mapa' },
-]
+const VIEWS: View[] = ['momentos', 'mapa']
 
 export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
   const [view, setView] = useState<View>('momentos')
@@ -16,7 +14,11 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
   const tabRefs = useRef<Record<View, HTMLButtonElement | null>>({ momentos: null, mapa: null })
   const photoRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const detailRef = useRef<HTMLDivElement>(null)
+  const copy = useCopy()
+  const t = copy.postcard
+  const people = copy.people
   const moment = MOMENTS.find((m) => m.id === openId) ?? null
+  const momentText = moment ? copy.moments[moment.id] : null
 
   function changeView(next: View, focusTab = false) {
     setOpenId(null)
@@ -26,7 +28,7 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
   }
 
   function onTabKey(event: KeyboardEvent<HTMLButtonElement>) {
-    const i = VIEWS.findIndex((v) => v.id === view)
+    const i = VIEWS.indexOf(view)
     let next = -1
     if (event.key === 'ArrowRight') next = (i + 1) % VIEWS.length
     if (event.key === 'ArrowLeft') next = (i - 1 + VIEWS.length) % VIEWS.length
@@ -34,7 +36,7 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
     if (event.key === 'End') next = VIEWS.length - 1
     if (next < 0) return
     event.preventDefault()
-    changeView(VIEWS[next].id, true)
+    changeView(VIEWS[next], true)
   }
 
   function openMoment(m: Moment) {
@@ -56,25 +58,25 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
   return (
     <div className="postcard-block">
       <div className="postcard-controls">
-        <div className="tabs" role="tablist" aria-label="Lados de la postal">
+        <div className="tabs" role="tablist" aria-label={t.sides}>
           {VIEWS.map((v) => (
             <button
-              key={v.id}
+              key={v}
               ref={(el) => {
-                tabRefs.current[v.id] = el
+                tabRefs.current[v] = el
               }}
               type="button"
               role="tab"
-              id={`tab-${v.id}`}
-              aria-selected={view === v.id}
-              aria-controls={`face-${v.id}`}
-              tabIndex={view === v.id ? 0 : -1}
+              id={`tab-${v}`}
+              aria-selected={view === v}
+              aria-controls={`face-${v}`}
+              tabIndex={view === v ? 0 : -1}
               className="tab"
-              onClick={() => changeView(v.id)}
+              onClick={() => changeView(v)}
               onKeyDown={onTabKey}
             >
-              {v.id === 'momentos' ? <PhotoIcon /> : <PinIcon />}
-              {v.label}
+              {v === 'momentos' ? <PhotoIcon /> : <PinIcon />}
+              {v === 'momentos' ? t.moments : t.map}
             </button>
           ))}
         </div>
@@ -83,7 +85,7 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
           className="flip-btn"
           onClick={() => changeView(view === 'momentos' ? 'mapa' : 'momentos')}
         >
-          <FlipIcon /> Girar postal
+          <FlipIcon /> {t.flip}
         </button>
       </div>
 
@@ -102,9 +104,9 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
               <div className="face-head">
                 <p className="face-title">
                   <span className="face-title__big">
-                    {PEOPLE.valeria.name} y {PEOPLE.mama.name}
+                    {t.pair(people.valeria.name, people.mama.name)}
                   </span>
-                  <span className="face-title__small">Momentos de ejemplo · datos de demostración</span>
+                  <span className="face-title__small">{t.sample}</span>
                 </p>
               </div>
 
@@ -118,17 +120,17 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                         photoRefs.current[m.id] = el
                       }}
                       onClick={() => openMoment(m)}
-                      aria-label={`Abrir momento: ${m.label}, de ${PEOPLE[m.from].name}`}
+                      aria-label={t.openMoment(copy.moments[m.id].label, people[m.from].name)}
                     >
                       <Stamp art={m.art} tone={m.tone} image={m.image} />
-                      <span className="moment-btn__label hand">{m.label}</span>
+                      <span className="moment-btn__label hand">{copy.moments[m.id].label}</span>
                     </button>
                   </li>
                 ))}
               </ul>
 
               <p className="hand annotation annotation--photos" aria-hidden="true">
-                toca una foto
+                {t.tapHint}
                 <svg viewBox="0 0 60 30">
                   <path d="M6 26 C20 24 34 16 46 5 M46 5 l-10 1 M46 5 l-1 10" />
                 </svg>
@@ -138,15 +140,15 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                 <span className="post-stamp__art" aria-hidden="true">
                   <PinIcon />
                 </span>
-                <span className="post-stamp__text">Ver mapa</span>
+                <span className="post-stamp__text">{t.seeMap}</span>
               </button>
 
-              {moment && (
+              {moment && momentText && (
                 <div
                   ref={detailRef}
                   className="moment-detail"
                   role="region"
-                  aria-label={`Momento: ${moment.label}`}
+                  aria-label={t.momentRegion(momentText.label)}
                   tabIndex={-1}
                   onKeyDown={(event) => {
                     if (event.key === 'Escape') {
@@ -160,14 +162,14 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                   </div>
                   <div className="moment-detail__body">
                     <p className="moment-detail__meta">
-                      {PEOPLE[moment.from].name} · {PEOPLE[moment.from].city} · {moment.time}
+                      {people[moment.from].name} · {people[moment.from].city} · {momentText.time}
                     </p>
-                    <p className="moment-detail__message">«{moment.message}»</p>
+                    <p className="moment-detail__message">{copy.quote(momentText.message)}</p>
                     <p className="hand moment-detail__note">
-                      llegó hasta {moment.from === 'valeria' ? PEOPLE.mama.city : PEOPLE.valeria.city}
+                      {t.arrived(moment.from === 'valeria' ? people.mama.city : people.valeria.city)}
                     </p>
                     <button type="button" className="btn btn--ghost" onClick={closeMoment}>
-                      Volver a la postal
+                      {t.back}
                     </button>
                   </div>
                 </div>
@@ -183,8 +185,8 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
               inert={view !== 'mapa'}
             >
               <div className="map-side">
-                <MiniMap />
-                <span className="demo-tag demo-tag--map">Mapa ilustrativo · datos de demostración</span>
+                <MiniMap label={t.mapLabel(people.mama.city, people.valeria.city)} cities={[people.mama.city, people.valeria.city]} />
+                <span className="demo-tag demo-tag--map">{t.mapTag}</span>
               </div>
               <div className="address-side">
                 <div className="stamp-box">
@@ -192,29 +194,29 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                     <span className="post-stamp__art" aria-hidden="true">
                       <PhotoIcon />
                     </span>
-                    <span className="post-stamp__text">Ver momentos</span>
+                    <span className="post-stamp__text">{t.seeMoments}</span>
                   </button>
-                  <Postmark className="back-postmark" ring={`${PEOPLE.mama.city.toUpperCase()} · ${PEOPLE.valeria.city.toUpperCase()} · `} center="DEMO" waves />
+                  <Postmark className="back-postmark" ring={`${people.mama.city.toUpperCase()} · ${people.valeria.city.toUpperCase()} · `} center="DEMO" waves />
                 </div>
                 <dl className="address">
                   <div>
-                    <dt>Aquí</dt>
+                    <dt>{t.here}</dt>
                     <dd>
-                      {PEOPLE.mama.name} <span>{PEOPLE.mama.city}, {PEOPLE.mama.country}</span>
+                      {people.mama.name} <span>{people.mama.city}, {people.mama.country}</span>
                     </dd>
                   </div>
                   <div>
-                    <dt>Allá</dt>
+                    <dt>{t.there}</dt>
                     <dd>
-                      {PEOPLE.valeria.name} <span>{PEOPLE.valeria.city}, {PEOPLE.valeria.country}</span>
+                      {people.valeria.name} <span>{people.valeria.city}, {people.valeria.country}</span>
                     </dd>
                   </div>
                 </dl>
                 <p className="distance">
                   <span className="distance__km">{DISTANCE.km} km</span>
-                  <span className="distance__hours">y {DISTANCE.hours} horas de diferencia</span>
+                  <span className="distance__hours">{t.hours(DISTANCE.hours)}</span>
                 </p>
-                <p className="hand annotation annotation--map">y un mismo hilo</p>
+                <p className="hand annotation annotation--map">{t.sameThread}</p>
               </div>
             </div>
           </div>
@@ -250,10 +252,10 @@ const BRITAIN = poly([[-5, 50], [1.5, 51], [0, 53], [-3, 56], [-6, 58], [-5, 54]
 const MTY = project([-100.31, 25.67])
 const NAP = project([14.27, 40.85])
 
-function MiniMap() {
+function MiniMap({ label, cities }: { label: string; cities: [string, string] }) {
   const mid = [(MTY[0] + NAP[0]) / 2, Math.min(MTY[1], NAP[1]) - 110]
   return (
-    <svg className="mini-map" viewBox="0 0 600 340" role="img" aria-label="Mapa: Monterrey y Nápoles unidos por el hilo rojo">
+    <svg className="mini-map" viewBox="0 0 600 340" role="img" aria-label={label}>
       <rect width="600" height="340" className="mini-map__sea" />
       {[60, 120, 180, 240, 300].map((y) => (
         <path key={y} d={`M0 ${y} H600`} className="mini-map__grid" />
@@ -272,8 +274,8 @@ function MiniMap() {
           <circle cx={x} cy={y} r="6" className="mini-map__pin" />
         </g>
       ))}
-      <text x={MTY[0]} y={MTY[1] + 30} textAnchor="middle" className="mini-map__label">Monterrey</text>
-      <text x={NAP[0]} y={NAP[1] + 30} textAnchor="middle" className="mini-map__label">Nápoles</text>
+      <text x={MTY[0]} y={MTY[1] + 30} textAnchor="middle" className="mini-map__label">{cities[0]}</text>
+      <text x={NAP[0]} y={NAP[1] + 30} textAnchor="middle" className="mini-map__label">{cities[1]}</text>
     </svg>
   )
 }

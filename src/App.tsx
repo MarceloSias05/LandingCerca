@@ -6,7 +6,8 @@ import { Terrain } from './components/Terrain'
 import { Thread } from './components/Thread'
 import { WaitlistButton, WaitlistProvider } from './components/Waitlist'
 import { BRAND_NAME } from './config'
-import { DISTANCE, MOMENTS, PEOPLE, STATIONS } from './content'
+import { DISTANCE, MOMENTS, STATIONS } from './content'
+import { LANGS, useCopy, useLang } from './i18n'
 import { useMotion } from './motion'
 
 const rot = (deg: number) => ({ '--r': `${deg}deg` }) as CSSProperties
@@ -18,25 +19,62 @@ const STATION_LOOK = [
 ] as const
 
 export default function App({ confirmed = false }: { confirmed?: boolean }) {
-  const journeyRef = useRef<HTMLElement>(null)
-  const [discovered, setDiscovered] = useState<string[]>([])
-
-  useMotion(journeyRef)
+  const { lang } = useLang()
+  const t = useCopy()
 
   return (
     <WaitlistProvider initialConfirmed={confirmed}>
       <a className="skip-link" href="#main">
-        Saltar al contenido
+        {t.skip}
       </a>
       <header className="site-header">
-        <a className="wordmark" href="#main" aria-label={`${BRAND_NAME}, inicio`}>
+        <a className="wordmark" href="#main" aria-label={t.home}>
           {BRAND_NAME}
         </a>
-        <WaitlistButton location="header" variant="small">
-          Lista de espera
-        </WaitlistButton>
+        <div className="site-header__end">
+          <LangSwitch />
+          <WaitlistButton location="header" variant="small">
+            {t.headerCta}
+          </WaitlistButton>
+        </div>
       </header>
+      {/* Al cambiar de idioma se vuelve a montar el recorrido: SplitText y el hilo
+          se recalculan sobre el texto nuevo. */}
+      <Journey key={lang} />
+    </WaitlistProvider>
+  )
+}
 
+function LangSwitch() {
+  const { lang, setLang } = useLang()
+  const t = useCopy()
+  return (
+    <div className="lang-switch" role="group" aria-label={t.lang.label}>
+      {LANGS.map((l) => (
+        <button
+          key={l}
+          type="button"
+          lang={l}
+          aria-label={t.lang[l]}
+          aria-pressed={lang === l}
+          onClick={() => setLang(l)}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function Journey() {
+  const journeyRef = useRef<HTMLElement>(null)
+  const [discovered, setDiscovered] = useState<string[]>([])
+  const t = useCopy()
+
+  useMotion(journeyRef)
+
+  return (
+    <>
       <main id="main" className="journey" ref={journeyRef}>
         <Thread rootRef={journeyRef} />
 
@@ -45,21 +83,21 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
           <div className="hero__text">
             <h1 id="hero-title" className="hero__title">
               <span className="display" data-hero-lines>
-                Hay kilómetros entre ustedes.
+                {t.hero.title}
               </span>
               <em className="hero__turn" data-hero-fade>
-                Que no se sientan en todo.
+                {t.hero.turn}
               </em>
             </h1>
             <p className="lede" data-hero-fade>
-              Un espacio para compartir pequeños momentos y sentir cerca a esa persona, aunque esté lejos.
+              {t.hero.lede}
             </p>
             <div className="cta-row" data-hero-fade>
-              <WaitlistButton location="hero">Quiero estar cerca</WaitlistButton>
-              <p className="cta-note">Únete a la lista de espera.</p>
+              <WaitlistButton location="hero">{t.hero.cta}</WaitlistButton>
+              <p className="cta-note">{t.hero.ctaNote}</p>
             </div>
             <p className="platform" data-hero-fade>
-              {BRAND_NAME} es una app para iPhone, en desarrollo.
+              {t.hero.platform}
             </p>
           </div>
 
@@ -70,7 +108,7 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
                 <Stamp art="napoles" tone="sky" />
               </div>
               <figcaption className="tag tag--cream">
-                {PEOPLE.valeria.city} <span>9:20 p. m.</span>
+                {t.people.valeria.city} <span>{t.hero.farTime}</span>
               </figcaption>
             </figure>
             <figure className="place place--near">
@@ -79,20 +117,20 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
                 <Stamp art="monterrey" tone="butter" />
               </div>
               <figcaption className="tag tag--butter">
-                {PEOPLE.mama.city} <span>1:20 p. m.</span>
+                {t.people.mama.city} <span>{t.hero.nearTime}</span>
               </figcaption>
               <span className="anchor-ghost place__exit" data-anchor aria-hidden="true" />
             </figure>
             <div className="hero__postmark" data-hero-postmark>
-              <Postmark ring={`${BRAND_NAME} · DE AQUÍ PARA ALLÁ · `} center={`${DISTANCE.km}`} sub="KM" waves />
+              <Postmark ring={t.hero.postmark} center={`${DISTANCE.km}`} sub="KM" waves />
             </div>
             <p className="coords" aria-hidden="true">
-              25°40′N 100°18′O · 40°51′N 14°16′E
+              {t.hero.coords}
             </p>
           </div>
 
           <a className="scroll-hint hand" href="#recorrido">
-            sigue el hilo
+            {t.hero.scroll}
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 4v15M6 13l6 6 6-6" />
             </svg>
@@ -105,13 +143,13 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
           <div className="zoom__stage">
             <h2 id="zoom-title" className="zoom__title">
               <span className="zoom__word zoom__word--top" data-zoom-top>
-                Todos los días
+                {t.zoom.top}
               </span>{' '}
               <span className="zoom__word zoom__word--bottom" data-zoom-bottom>
-                pasa algo
+                {t.zoom.bottom}
               </span>{' '}
               <span className="zoom__rest" data-zoom-rest>
-                que quisieras contarle a alguien.
+                {t.zoom.rest}
               </span>
             </h2>
             <div className="zoom__stamp" data-zoom-stamp>
@@ -123,12 +161,13 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         {/* Estaciones */}
         {STATIONS.map((s, i) => {
           const look = STATION_LOOK[i]
+          const text = t.stations[s.id]
           const right = i % 2 === 0
           return (
             <section
               key={s.id}
               className={`band band--${look.band} station station--${right ? 'right' : 'left'}`}
-              aria-label={s.kicker}
+              aria-label={text.kicker}
             >
               <Terrain shape={look.terrain} />
               <div className="station__media">
@@ -140,14 +179,12 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
               </div>
               <div className="station__text">
                 <p className="station__phrase" data-words>
-                  «{s.phrase}»
+                  {t.quote(text.phrase)}
                 </p>
-                <p className="hand station__note">{s.kicker}</p>
-                <p className="station__meta">{s.meta}</p>
+                <p className="hand station__note">{text.kicker}</p>
+                <p className="station__meta">{text.meta}</p>
                 {i === STATIONS.length - 1 && (
-                  <p className="station__bridge">
-                    Con {BRAND_NAME}, esos momentos le llegan a la persona en la que pensabas, del otro lado del hilo.
-                  </p>
+                  <p className="station__bridge">{t.bridge}</p>
                 )}
               </div>
             </section>
@@ -159,18 +196,15 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
           <Terrain shape="mesa" />
           <div className="postcard-section__intro">
             <h2 id="postcard-title" className="display-md" data-words>
-              Explora la postal
+              {t.postcardIntro.title}
             </h2>
-            <p>
-              Así se siente {BRAND_NAME}: lo que vive uno le llega al otro. Toca una foto para abrir un momento, o
-              gira la postal para ver dónde está cada quien.
-            </p>
+            <p>{t.postcardIntro.text}</p>
           </div>
           <Postcard onDiscover={(id) => setDiscovered((d) => (d.includes(id) ? d : [...d, id]))} />
           <div className="mid-cta">
-            <p>¿Hay alguien con quien quisieras compartir así?</p>
-            <WaitlistButton location="postcard">Quiero estar cerca</WaitlistButton>
-            <p className="cta-note">Únete a la lista de espera.</p>
+            <p>{t.midCta.question}</p>
+            <WaitlistButton location="postcard">{t.midCta.cta}</WaitlistButton>
+            <p className="cta-note">{t.midCta.note}</p>
           </div>
         </section>
 
@@ -178,24 +212,22 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         <section className="band band--sky benefit" aria-labelledby="benefit-title">
           <Terrain shape="colinas" />
           <h2 id="benefit-title" className="display-md benefit__title" data-scrub-words>
-            Compartir lo pequeño también es estar presente.
+            {t.benefit.title}
           </h2>
-          <p className="benefit__text">
-            Lo que se mandan se queda guardado: una historia de los dos que se va llenando, aunque vivan en horarios
-            distintos.
-          </p>
+          <p className="benefit__text">{t.benefit.text}</p>
           <div className="clothesline">
             <span className="node node--nail clothesline__start" data-anchor data-tangent-out="1,0.18" aria-hidden="true" />
-            <ul className="clothesline__items" aria-label="Momentos de la postal">
+            <ul className="clothesline__items" aria-label={t.benefit.line}>
               {MOMENTS.map((m, i) => {
                 const seen = discovered.includes(m.id)
+                const text = t.moments[m.id]
                 return (
                   <li key={m.id} className="hang" data-open={seen} style={rot([-4, 3, -2, 4][i])}>
                     <span className="hang__pin" aria-hidden="true" />
                     <Stamp art={m.art} tone={m.tone} image={m.image} />
                     <span className="hang__label hand">
-                      <span className="hang__label-short">{m.label}</span>
-                      {seen && <span className="hang__label-full">«{m.message}»</span>}
+                      <span className="hang__label-short">{text.label}</span>
+                      {seen && <span className="hang__label-full">{t.quote(text.message)}</span>}
                     </span>
                   </li>
                 )
@@ -209,26 +241,23 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         <section className="band band--blue destination" aria-labelledby="final-title">
           <Terrain shape="sierra" />
           <div className="xmark" data-x-mark aria-hidden="true">
-            <span className="hand xmark__label">aquí se encuentran</span>
+            <span className="hand xmark__label">{t.final.mark}</span>
           </div>
           <div className="ticket" data-ticket>
             <h2 id="final-title" className="display-md">
-              Lo próximo que compartan puede empezar aquí.
+              {t.final.title}
             </h2>
-            <p>Únete a la lista de espera de {BRAND_NAME} y recibe novedades sobre su lanzamiento.</p>
-            <WaitlistButton location="final">Unirme a la lista de espera</WaitlistButton>
-            <Postmark className="ticket__postmark" ring={`LISTA DE ESPERA · ${BRAND_NAME} · `} center="AQUÍ" />
+            <p>{t.final.text}</p>
+            <WaitlistButton location="final">{t.final.cta}</WaitlistButton>
+            <Postmark className="ticket__postmark" ring={t.final.postmarkRing} center={t.final.postmarkCenter} />
           </div>
         </section>
       </main>
 
       <footer className="footer">
         <p className="wordmark wordmark--small">{BRAND_NAME}</p>
-        <p>
-          Una app para iPhone, en desarrollo. Las imágenes son ilustraciones provisionales; las personas, horas y
-          mensajes de la postal son datos de demostración.
-        </p>
+        <p>{t.footer}</p>
       </footer>
-    </WaitlistProvider>
+    </>
   )
 }

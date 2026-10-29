@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useCopy } from '../i18n'
 
 
 // Ilustraciones provisionales (planas, sin degradados) que ocupan el lugar de
@@ -26,19 +27,10 @@ const C = {
 
 export type ArtName = 'monterrey' | 'napoles' | 'cafe' | 'panaderia' | 'conchas' | 'flores' | 'lluvia'
 
-const DESCRIPTIONS: Record<ArtName, string> = {
-  monterrey: 'Atardecer en Monterrey con el Cerro de la Silla',
-  napoles: 'Vista del mar y el Vesubio desde una ventana en Nápoles',
-  cafe: 'Una taza de café y un cuernito en la mesa',
-  panaderia: 'La fachada de una panadería de barrio',
-  conchas: 'Conchas de pan dulce en un plato',
-  flores: 'Cubetas con flores en un mercado',
-  lluvia: 'Lluvia en la ventana y una taza en el alféizar',
-}
-
 export function Art({ name }: { name: ArtName }) {
+  const art = useCopy().art
   return (
-    <svg viewBox="0 0 240 300" role="img" aria-label={`Ilustración provisional: ${DESCRIPTIONS[name]}`}>
+    <svg viewBox="0 0 240 300" role="img" aria-label={`${art.prefix}: ${art[name]}`}>
       {SCENES[name]}
     </svg>
   )

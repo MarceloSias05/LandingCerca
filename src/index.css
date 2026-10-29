@@ -200,6 +200,7 @@ a {
   gap: 10px;
   border-radius: 999px;
   font: 700 1.02rem/1.1 var(--sans);
+  white-space: nowrap;
   text-decoration: none;
   transition:
     transform 160ms var(--ease-out),
@@ -291,6 +292,51 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.site-header__end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* En pantallas muy angostas el botón del encabezado sobra: el del inicio ya está a la vista. */
+@media (max-width: 359px) {
+  .site-header__end .btn--small {
+    display: none;
+  }
+}
+
+.lang-switch {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.lang-switch button {
+  appearance: none;
+  border: 0;
+  min-width: 40px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: 700 0.82rem/1 var(--sans);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+.lang-switch button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lang-switch button[aria-pressed='false']:hover {
+    background: rgb(30 26 23 / 0.1);
+  }
 }
 
 .wordmark {
@@ -584,11 +630,12 @@ a {
 }
 .hero__turn {
   display: block;
-  margin-top: 14px;
+  max-width: 19ch;
+  margin-top: 18px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem);
-  line-height: 1;
+  font-size: clamp(1.7rem, 1.1rem + 2vw, 2.7rem);
+  line-height: 1.04;
   color: var(--navy);
 }
 .lede {

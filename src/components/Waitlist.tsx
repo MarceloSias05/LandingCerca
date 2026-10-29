@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { track } from '../analytics'
-import { BRAND_NAME, JOTFORM_DIRECT_URL, JOTFORM_URL, SIGNUP_MESSAGE } from '../config'
+import { JOTFORM_DIRECT_URL, JOTFORM_URL, SIGNUP_MESSAGE } from '../config'
+import { useCopy, useLang } from '../i18n'
 
 type OpenWaitlist = (trigger: HTMLElement, location: string) => void
 
@@ -15,14 +16,19 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
   const [isOpen, setIsOpen] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [confirmed, setConfirmed] = useState(initialConfirmed)
+  const { lang } = useLang()
+  const t = useCopy().waitlist
 
-  const open = useCallback<OpenWaitlist>((trigger, location) => {
-    triggerRef.current = trigger
-    track('waitlist_cta_click', { location })
-    if (!JOTFORM_URL) track('waitlist_form_unavailable', { location })
-    setIsOpen(true)
-    dialogRef.current?.showModal()
-  }, [])
+  const open = useCallback<OpenWaitlist>(
+    (trigger, location) => {
+      triggerRef.current = trigger
+      track('waitlist_cta_click', { location, lang })
+      if (!JOTFORM_URL) track('waitlist_form_unavailable', { location, lang })
+      setIsOpen(true)
+      dialogRef.current?.showModal()
+    },
+    [lang],
+  )
 
   const close = useCallback(() => dialogRef.current?.close(), [])
 
@@ -62,9 +68,9 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
         <div className="waitlist__sheet">
           <header className="waitlist__header">
             <h2 id="waitlist-title" className="waitlist__title">
-              Lista de espera de {BRAND_NAME}
+              {t.title}
             </h2>
-            <button type="button" className="icon-btn" onClick={close} aria-label="Cerrar la lista de espera">
+            <button type="button" className="icon-btn" onClick={close} aria-label={t.close}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
@@ -74,30 +80,27 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
           {JOTFORM_URL ? (
             <>
               <div className="waitlist__frame" data-loaded={loaded}>
-                {!loaded && <p className="waitlist__loading">Cargando el formulario…</p>}
+                {!loaded && <p className="waitlist__loading">{t.loading}</p>}
                 {isOpen && (
                   <iframe
                     ref={iframeRef}
                     src={JOTFORM_URL}
-                    title={`Formulario de la lista de espera de ${BRAND_NAME}`}
+                    title={t.frameTitle}
                     allow="geolocation; microphone; camera; fullscreen"
                     onLoad={() => setLoaded(true)}
                   />
                 )}
               </div>
               <p className="waitlist__alt">
-                ¿No se ve bien?{' '}
+                {t.altQuestion}{' '}
                 <a href={JOTFORM_DIRECT_URL ?? JOTFORM_URL} target="_blank" rel="noopener">
-                  Abre el formulario en una pestaña nueva
+                  {t.altLink}
                 </a>
               </p>
             </>
           ) : (
             <div className="waitlist__pending" role="status">
-              <p>
-                El formulario de registro todavía no está conectado. En cuanto esté listo, aquí podrás dejar tus
-                datos para recibir novedades de {BRAND_NAME}.
-              </p>
+              <p>{t.pending}</p>
               {import.meta.env.DEV && (
                 <p className="waitlist__dev">
                   Para el equipo: agrega <code>VITE_JOTFORM_URL</code> en <code>.env</code> (ver{' '}
@@ -105,7 +108,7 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
                 </p>
               )}
               <button type="button" className="btn btn--ghost" onClick={close}>
-                Volver a la página
+                {t.backToPage}
               </button>
             </div>
           )}
@@ -117,13 +120,13 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
 }
 
 export function SignupThanks({ onDismiss }: { onDismiss: () => void }) {
+  const t = useCopy().waitlist
   return (
     <div className="thanks" role="status">
       <p>
-        <strong>¡Listo!</strong> Ya estás en la lista de espera de {BRAND_NAME}. Te escribiremos cuando haya
-        novedades.
+        <strong>{t.thanksLead}</strong> {t.thanks}
       </p>
-      <button type="button" className="icon-btn" onClick={onDismiss} aria-label="Cerrar aviso">
+      <button type="button" className="icon-btn" onClick={onDismiss} aria-label={t.dismiss}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" />
         </svg>
