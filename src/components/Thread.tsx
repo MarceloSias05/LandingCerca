@@ -1,8 +1,5 @@
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useEffect, useRef, type RefObject } from 'react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /*
  * El hilo rojo. Recorre, en orden del documento, los elementos marcados con
@@ -59,6 +56,8 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
   const svgRef = useRef<SVGSVGElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const crossRef = useRef<SVGPathElement>(null)
+  const shadowRef = useRef<SVGPathElement>(null)
+  const crossShadowRef = useRef<SVGPathElement>(null)
   const tipRef = useRef<SVGCircleElement>(null)
 
   useEffect(() => {
@@ -67,7 +66,9 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
     const path = pathRef.current
     const cross = crossRef.current
     const tip = tipRef.current
-    if (!root || !svg || !path || !cross || !tip) return
+    const shadow = shadowRef.current
+    const crossShadow = crossShadowRef.current
+    if (!root || !svg || !path || !cross || !tip || !shadow || !crossShadow) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     let total = 0
@@ -105,10 +106,13 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
         const x0 = xMark(x, y, mark.offsetWidth * 0.32)
         parts.push(segment(anchors[anchors.length - 1], x0.start), x0.first)
         cross!.setAttribute('d', x0.second)
+        crossShadow!.setAttribute('d', x0.second)
       } else {
         cross!.removeAttribute('d')
+        crossShadow!.removeAttribute('d')
       }
       path!.setAttribute('d', parts.join(' '))
+      shadow!.setAttribute('d', parts.join(' '))
       mainLen = path!.getTotalLength()
       crossLen = mark ? cross!.getTotalLength() : 0
       total = mainLen + crossLen
@@ -134,8 +138,8 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
         maxY[i] = m
       }
 
-      path!.style.strokeDasharray = `${mainLen} ${mainLen}`
-      cross!.style.strokeDasharray = `${crossLen} ${crossLen}`
+      for (const p of [path!, shadow!]) p.style.strokeDasharray = `${mainLen} ${mainLen}`
+      for (const p of [cross!, crossShadow!]) p.style.strokeDasharray = `${crossLen} ${crossLen}`
       laidOut = true
       if (reduce.matches) state.drawn = total
       render()
@@ -164,8 +168,8 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
     function render() {
       const onMain = Math.min(state.drawn, mainLen)
       const onCross = Math.max(0, state.drawn - mainLen)
-      path!.style.strokeDashoffset = `${mainLen - onMain}`
-      cross!.style.strokeDashoffset = `${crossLen - onCross}`
+      for (const p of [path!, shadow!]) p.style.strokeDashoffset = `${mainLen - onMain}`
+      for (const p of [cross!, crossShadow!]) p.style.strokeDashoffset = `${crossLen - onCross}`
       const p = onCross > 0 ? cross!.getPointAtLength(onCross) : path!.getPointAtLength(onMain)
       tip!.setAttribute('cx', `${p.x}`)
       tip!.setAttribute('cy', `${p.y}`)
@@ -191,12 +195,13 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
       })
     }
 
-    const trigger = ScrollTrigger.create({
-      trigger: root,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: () => update(),
-    })
+    // Scroll nativo (pasivo): no depende del orden ni del espacio de los pines de ScrollTrigger.
+    let scrollFrame = 0
+    const onScroll = () => {
+      cancelAnimationFrame(scrollFrame)
+      scrollFrame = requestAnimationFrame(() => update())
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     let frame = 0
     const relayout = () => {
@@ -209,7 +214,8 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
     reduce.addEventListener('change', relayout)
 
     return () => {
-      trigger.kill()
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(scrollFrame)
       observer.disconnect()
       cancelAnimationFrame(frame)
       reduce.removeEventListener('change', relayout)
@@ -219,6 +225,8 @@ export function Thread({ rootRef }: { rootRef: RefObject<HTMLElement | null> }) 
 
   return (
     <svg ref={svgRef} className="thread" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+      <path ref={shadowRef} className="thread__shadow" />
+      <path ref={crossShadowRef} className="thread__shadow" />
       <path ref={pathRef} className="thread__line" />
       <path ref={crossRef} className="thread__line" />
       <circle ref={tipRef} className="thread__tip" r="4.5" />

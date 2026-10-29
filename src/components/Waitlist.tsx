@@ -61,12 +61,9 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
       >
         <div className="waitlist__sheet">
           <header className="waitlist__header">
-            <div>
-              <p className="hand waitlist__kicker">nos vemos en la X</p>
-              <h2 id="waitlist-title" className="waitlist__title">
-                Lista de espera de {BRAND_NAME}
-              </h2>
-            </div>
+            <h2 id="waitlist-title" className="waitlist__title">
+              Lista de espera de {BRAND_NAME}
+            </h2>
             <button type="button" className="icon-btn" onClick={close} aria-label="Cerrar la lista de espera">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />

@@ -1,22 +1,27 @@
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import { Postcard } from './components/Postcard'
+import { Postmark } from './components/Postmark'
 import { Stamp } from './components/Stamp'
+import { Terrain } from './components/Terrain'
 import { Thread } from './components/Thread'
 import { WaitlistButton, WaitlistProvider } from './components/Waitlist'
 import { BRAND_NAME } from './config'
 import { DISTANCE, MOMENTS, PEOPLE, STATIONS } from './content'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useMotion } from './motion'
 
 const rot = (deg: number) => ({ '--r': `${deg}deg` }) as CSSProperties
+
+const STATION_LOOK = [
+  { band: 'butter', terrain: 'colinas' },
+  { band: 'pink', terrain: 'sierra' },
+  { band: 'sage', terrain: 'olas' },
+] as const
 
 export default function App({ confirmed = false }: { confirmed?: boolean }) {
   const journeyRef = useRef<HTMLElement>(null)
   const [discovered, setDiscovered] = useState<string[]>([])
 
-  useEntrances(journeyRef)
+  useMotion(journeyRef)
 
   return (
     <WaitlistProvider initialConfirmed={confirmed}>
@@ -36,35 +41,41 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         <Thread rootRef={journeyRef} />
 
         {/* Inicio */}
-        <section className="hero" aria-labelledby="hero-title">
+        <section className="band band--blue hero" aria-labelledby="hero-title">
           <div className="hero__text">
-            <p className="hand kicker">para quien está lejos</p>
-            <h1 id="hero-title" className="display">
-              Hay kilómetros entre ustedes. <em>Que no se sientan en todo.</em>
+            <h1 id="hero-title" className="hero__title">
+              <span className="display" data-hero-lines>
+                Hay kilómetros entre ustedes.
+              </span>
+              <em className="hero__turn" data-hero-fade>
+                Que no se sientan en todo.
+              </em>
             </h1>
-            <p className="lede">
+            <p className="lede" data-hero-fade>
               Un espacio para compartir pequeños momentos y sentir cerca a esa persona, aunque esté lejos.
             </p>
-            <div className="cta-row">
+            <div className="cta-row" data-hero-fade>
               <WaitlistButton location="hero">Quiero estar cerca</WaitlistButton>
               <p className="cta-note">Únete a la lista de espera.</p>
             </div>
-            <p className="platform">{BRAND_NAME} es una app para iPhone, en desarrollo.</p>
+            <p className="platform" data-hero-fade>
+              {BRAND_NAME} es una app para iPhone, en desarrollo.
+            </p>
           </div>
 
           <div className="hero__collage">
             <figure className="place place--far">
               <span className="node node--pin" data-anchor aria-hidden="true" />
-              <div className="place__card" data-reveal style={rot(3.5)}>
+              <div className="place__card" data-hero-stamp style={rot(5)}>
                 <Stamp art="napoles" tone="sky" />
               </div>
-              <figcaption className="tag tag--sky">
+              <figcaption className="tag tag--cream">
                 {PEOPLE.valeria.city} <span>9:20 p. m.</span>
               </figcaption>
             </figure>
             <figure className="place place--near">
               <span className="node node--pin" data-anchor aria-hidden="true" />
-              <div className="place__card" data-reveal style={rot(-4)}>
+              <div className="place__card" data-hero-stamp style={rot(-5)}>
                 <Stamp art="monterrey" tone="butter" />
               </div>
               <figcaption className="tag tag--butter">
@@ -72,12 +83,11 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
               </figcaption>
               <span className="anchor-ghost place__exit" data-anchor aria-hidden="true" />
             </figure>
-            <p className="postmark" data-reveal>
-              <span>{DISTANCE.km} km</span>
-              <span>{DISTANCE.hours} h de diferencia</span>
-            </p>
-            <p className="hand collage-note" aria-hidden="true">
-              tú aquí, yo allá
+            <div className="hero__postmark" data-hero-postmark>
+              <Postmark ring={`${BRAND_NAME} · DE AQUÍ PARA ALLÁ · `} center={`${DISTANCE.km}`} sub="KM" waves />
+            </div>
+            <p className="coords" aria-hidden="true">
+              25°40′N 100°18′O · 40°51′N 14°16′E
             </p>
           </div>
 
@@ -89,49 +99,71 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
           </a>
         </section>
 
-        {/* El recorrido */}
-        <section className="route" id="recorrido" aria-labelledby="route-title">
-          <h2 id="route-title" className="route__intro display-sm">
-            Todos los días pasa algo que quisieras contarle a alguien.
-          </h2>
-          <ol className="stations">
-            {STATIONS.map((s, i) => (
-              <li key={s.id} className={`station station--${i % 2 ? 'left' : 'right'}`}>
-                <div className="station__media">
-                  <span className="node node--pin" data-anchor aria-hidden="true" />
-                  <div className="station__card" data-reveal style={rot([4, -3.5, 2.5][i])}>
-                    <Stamp art={s.art} tone={s.tone} />
-                  </div>
-                  <span className="anchor-ghost station__exit" data-anchor aria-hidden="true" />
-                </div>
-                <div className="station__text" data-reveal-text>
-                  <p className="hand station__kicker">
-                    <span className="station__num" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    {s.kicker}
-                  </p>
-                  <p className="station__phrase">«{s.phrase}»</p>
-                  <p className="station__meta">{s.meta}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <p className="route__bridge">
-            Con {BRAND_NAME}, esos momentos le llegan a la persona en la que pensabas, del otro lado del hilo.
-          </p>
+        {/* Zoom: dentro de la estampilla */}
+        <section className="band band--green zoom" id="recorrido" aria-labelledby="zoom-title" data-zoom>
+          <Terrain shape="dunas" />
+          <div className="zoom__stage">
+            <h2 id="zoom-title" className="zoom__title">
+              <span className="zoom__word zoom__word--top" data-zoom-top>
+                Todos los días
+              </span>{' '}
+              <span className="zoom__word zoom__word--bottom" data-zoom-bottom>
+                pasa algo
+              </span>{' '}
+              <span className="zoom__rest" data-zoom-rest>
+                que quisieras contarle a alguien.
+              </span>
+            </h2>
+            <div className="zoom__stamp" data-zoom-stamp>
+              <Stamp art="lluvia" tone="sky" />
+            </div>
+          </div>
         </section>
 
+        {/* Estaciones */}
+        {STATIONS.map((s, i) => {
+          const look = STATION_LOOK[i]
+          const right = i % 2 === 0
+          return (
+            <section
+              key={s.id}
+              className={`band band--${look.band} station station--${right ? 'right' : 'left'}`}
+              aria-label={s.kicker}
+            >
+              <Terrain shape={look.terrain} />
+              <div className="station__media">
+                <span className="node node--pin" data-anchor aria-hidden="true" />
+                <div className="station__card" data-rise style={rot([5, -4, 3][i])}>
+                  <Stamp art={s.art} tone={s.tone} />
+                </div>
+                <span className="anchor-ghost station__exit" data-anchor aria-hidden="true" />
+              </div>
+              <div className="station__text">
+                <p className="station__phrase" data-words>
+                  «{s.phrase}»
+                </p>
+                <p className="hand station__note">{s.kicker}</p>
+                <p className="station__meta">{s.meta}</p>
+                {i === STATIONS.length - 1 && (
+                  <p className="station__bridge">
+                    Con {BRAND_NAME}, esos momentos le llegan a la persona en la que pensabas, del otro lado del hilo.
+                  </p>
+                )}
+              </div>
+            </section>
+          )
+        })}
+
         {/* La postal */}
-        <section className="postcard-section" aria-labelledby="postcard-title">
+        <section className="band band--cream postcard-section" aria-labelledby="postcard-title">
+          <Terrain shape="mesa" />
           <div className="postcard-section__intro">
-            <p className="hand kicker">a mitad del camino</p>
-            <h2 id="postcard-title" className="display-md">
+            <h2 id="postcard-title" className="display-md" data-words>
               Explora la postal
             </h2>
             <p>
               Así se siente {BRAND_NAME}: lo que vive uno le llega al otro. Toca una foto para abrir un momento, o
-              cambia al mapa para ver dónde está cada quien.
+              gira la postal para ver dónde está cada quien.
             </p>
           </div>
           <Postcard onDiscover={(id) => setDiscovered((d) => (d.includes(id) ? d : [...d, id]))} />
@@ -143,8 +175,9 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         </section>
 
         {/* El beneficio */}
-        <section className="benefit" aria-labelledby="benefit-title">
-          <h2 id="benefit-title" className="display-md benefit__title">
+        <section className="band band--sky benefit" aria-labelledby="benefit-title">
+          <Terrain shape="colinas" />
+          <h2 id="benefit-title" className="display-md benefit__title" data-scrub-words>
             Compartir lo pequeño también es estar presente.
           </h2>
           <p className="benefit__text">
@@ -173,16 +206,18 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
         </section>
 
         {/* El destino */}
-        <section className="destination" aria-labelledby="final-title">
+        <section className="band band--blue destination" aria-labelledby="final-title">
+          <Terrain shape="sierra" />
           <div className="xmark" data-x-mark aria-hidden="true">
             <span className="hand xmark__label">aquí se encuentran</span>
           </div>
-          <div className="ticket">
+          <div className="ticket" data-ticket>
             <h2 id="final-title" className="display-md">
               Lo próximo que compartan puede empezar aquí.
             </h2>
             <p>Únete a la lista de espera de {BRAND_NAME} y recibe novedades sobre su lanzamiento.</p>
             <WaitlistButton location="final">Unirme a la lista de espera</WaitlistButton>
+            <Postmark className="ticket__postmark" ring={`LISTA DE ESPERA · ${BRAND_NAME} · `} center="AQUÍ" />
           </div>
         </section>
       </main>
@@ -196,71 +231,4 @@ export default function App({ confirmed = false }: { confirmed?: boolean }) {
       </footer>
     </WaitlistProvider>
   )
-}
-
-/** Entradas suaves de fotos, textos y la postal. Sin animación si el usuario pide menos movimiento. */
-function useEntrances(scope: React.RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    const mm = gsap.matchMedia()
-    mm.add(
-      { motion: '(prefers-reduced-motion: no-preference)', small: '(max-width: 760px)' },
-      (ctx) => {
-        const { motion, small } = ctx.conditions as { motion: boolean; small: boolean }
-        if (!motion) return
-
-        gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el, i) => {
-          gsap.from(el, {
-            y: small ? 18 : 32,
-            rotation: i % 2 ? 5 : -5,
-            opacity: 0,
-            duration: 0.9,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-          })
-        })
-
-        gsap.utils.toArray<HTMLElement>('[data-reveal-text]').forEach((el) => {
-          gsap.from(el.children, {
-            y: 14,
-            opacity: 0,
-            duration: 0.7,
-            ease: 'expo.out',
-            stagger: 0.06,
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          })
-        })
-
-        // La postal es el punto culminante: llega girando y se asienta con el scroll.
-        const card = document.querySelector<HTMLElement>('[data-reveal-card]')
-        if (card) {
-          gsap.fromTo(
-            card,
-            { y: small ? 40 : 90, rotation: small ? -2 : -6, scale: small ? 0.96 : 0.9 },
-            {
-              y: 0,
-              rotation: 0,
-              scale: 1,
-              ease: 'none',
-              scrollTrigger: { trigger: card, start: 'top bottom', end: 'top 30%', scrub: 0.6 },
-            },
-          )
-        }
-
-        gsap.utils.toArray<HTMLElement>('.hang').forEach((el, i) => {
-          gsap.from(el, {
-            y: -24,
-            rotation: i % 2 ? 10 : -10,
-            opacity: 0,
-            duration: 1.1,
-            ease: 'elastic.out(1, 0.6)',
-            delay: i * 0.07,
-            scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-          })
-        })
-      },
-      scope.current ?? undefined,
-    )
-    document.fonts?.ready.then(() => ScrollTrigger.refresh())
-    return () => mm.revert()
-  }, [scope])
 }

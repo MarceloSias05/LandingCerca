@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { track } from '../analytics'
 import { DISTANCE, MOMENTS, PEOPLE, type Moment } from '../content'
+import { Postmark } from './Postmark'
 import { Stamp } from './Stamp'
 
 type View = 'momentos' | 'mapa'
@@ -100,9 +101,11 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
             >
               <div className="face-head">
                 <p className="face-title">
-                  Momentos entre {PEOPLE.valeria.name} y {PEOPLE.mama.name}
+                  <span className="face-title__big">
+                    {PEOPLE.valeria.name} y {PEOPLE.mama.name}
+                  </span>
+                  <span className="face-title__small">Momentos de ejemplo · datos de demostración</span>
                 </p>
-                <span className="demo-tag">Datos de demostración</span>
               </div>
 
               <ul className="moment-grid">
@@ -184,6 +187,15 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                 <span className="demo-tag demo-tag--map">Mapa ilustrativo · datos de demostración</span>
               </div>
               <div className="address-side">
+                <div className="stamp-box">
+                  <button type="button" className="post-stamp post-stamp--moments" onClick={() => changeView('momentos')}>
+                    <span className="post-stamp__art" aria-hidden="true">
+                      <PhotoIcon />
+                    </span>
+                    <span className="post-stamp__text">Ver momentos</span>
+                  </button>
+                  <Postmark className="back-postmark" ring={`${PEOPLE.mama.city.toUpperCase()} · ${PEOPLE.valeria.city.toUpperCase()} · `} center="DEMO" waves />
+                </div>
                 <dl className="address">
                   <div>
                     <dt>Aquí</dt>
@@ -203,12 +215,6 @@ export function Postcard({ onDiscover }: { onDiscover: (id: string) => void }) {
                   <span className="distance__hours">y {DISTANCE.hours} horas de diferencia</span>
                 </p>
                 <p className="hand annotation annotation--map">y un mismo hilo</p>
-                <button type="button" className="post-stamp post-stamp--moments" onClick={() => changeView('momentos')}>
-                  <span className="post-stamp__art" aria-hidden="true">
-                    <PhotoIcon />
-                  </span>
-                  <span className="post-stamp__text">Ver momentos</span>
-                </button>
               </div>
             </div>
           </div>
