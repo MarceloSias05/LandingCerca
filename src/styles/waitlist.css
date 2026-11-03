@@ -1,0 +1,146 @@
+/* ───────── Lista de espera (Jotform, provisional hasta la Fase 4) ───────── */
+.waitlist {
+  width: min(560px, 100% - 32px);
+  height: min(780px, 100dvh - 32px);
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  --focus: var(--ink);
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.6);
+  overflow: hidden;
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 240ms ease-out,
+    translate var(--dur-ui) var(--ease-out);
+}
+.waitlist[open] {
+  @starting-style {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+.waitlist::backdrop {
+  background: rgb(15 17 36 / 0.72);
+}
+.waitlist__sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.waitlist__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-4) var(--s-3) var(--s-5);
+  border-bottom: 1px solid var(--paper-line);
+}
+.waitlist__title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+.waitlist__frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #fff;
+}
+.waitlist__frame iframe {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.waitlist__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+}
+.waitlist__alt {
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  border-top: 1px solid var(--paper-line);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+.waitlist__alt a {
+  color: var(--ink);
+  font-weight: 600;
+}
+.waitlist__pending {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding: var(--s-5);
+}
+.waitlist__dev {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+@media (max-width: 599px) {
+  .waitlist {
+    width: 100%;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .waitlist__header {
+    padding-top: calc(var(--s-4) + env(safe-area-inset-top));
+  }
+}
+
+.thanks {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  translate: -50% 0;
+  width: min(520px, 100% - 32px);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-3) var(--s-3) var(--s-5);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  --focus: var(--ink);
+  box-shadow: 0 20px 50px -16px rgb(0 0 0 / 0.5);
+  transition:
+    opacity 300ms ease-out,
+    translate 400ms var(--ease-out);
+  @starting-style {
+    opacity: 0;
+    translate: -50% 16px;
+  }
+}
+.thanks p {
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waitlist {
+    translate: none;
+    transition: opacity 200ms ease;
+  }
+  .waitlist[open] {
+    @starting-style {
+      translate: none;
+    }
+  }
+  .thanks {
+    transition: opacity 200ms ease;
+    @starting-style {
+      translate: -50% 0;
+    }
+  }
+}

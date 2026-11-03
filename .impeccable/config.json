@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-03T00:57:24.906Z",
+        "reason": "user confirmed 2026-11-03: keep Inter for UI/body (matches CERCA marketing videos); Newsreader carries the brand voice"
+      }
+    ]
+  }
+}

@@ -86,7 +86,6 @@ export function WaitlistProvider({ children, initialConfirmed = false }: Provide
                     ref={iframeRef}
                     src={JOTFORM_URL}
                     title={t.frameTitle}
-                    allow="geolocation; microphone; camera; fullscreen"
                     onLoad={() => setLoaded(true)}
                   />
                 )}

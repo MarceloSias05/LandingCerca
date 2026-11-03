@@ -1,0 +1,87 @@
+{
+  "hero-napoles": {
+    "width": 960,
+    "height": 1200,
+    "src": "/photos/hero-napoles-640.jpg",
+    "avif": "/photos/hero-napoles-400.avif 400w, /photos/hero-napoles-640.avif 640w, /photos/hero-napoles-960.avif 960w",
+    "webp": "/photos/hero-napoles-400.webp 400w, /photos/hero-napoles-640.webp 640w, /photos/hero-napoles-960.webp 960w",
+    "jpg": "/photos/hero-napoles-400.jpg 400w, /photos/hero-napoles-640.jpg 640w, /photos/hero-napoles-960.jpg 960w",
+    "provisional": true,
+    "credit": {
+      "author": "hijirin",
+      "title": "Night view of Napoli",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Night_view_of_Napoli_-_panoramio_(1).jpg",
+      "changes": "recortada"
+    }
+  },
+  "hero-monterrey": {
+    "width": 720,
+    "height": 900,
+    "src": "/photos/hero-monterrey-480.jpg",
+    "avif": "/photos/hero-monterrey-320.avif 320w, /photos/hero-monterrey-480.avif 480w, /photos/hero-monterrey-720.avif 720w",
+    "webp": "/photos/hero-monterrey-320.webp 320w, /photos/hero-monterrey-480.webp 480w, /photos/hero-monterrey-720.webp 720w",
+    "jpg": "/photos/hero-monterrey-320.jpg 320w, /photos/hero-monterrey-480.jpg 480w, /photos/hero-monterrey-720.jpg 720w",
+    "provisional": true,
+    "credit": {
+      "author": "Matt1220",
+      "title": "Cerro de la Silla Mty NL",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cerro_de_la_Silla_Mty_NL.jpg",
+      "changes": "recortada"
+    }
+  },
+  "moment-comida": {
+    "width": 800,
+    "height": 1000,
+    "src": "/photos/moment-comida-480.jpg",
+    "avif": "/photos/moment-comida-240.avif 240w, /photos/moment-comida-480.avif 480w, /photos/moment-comida-800.avif 800w",
+    "webp": "/photos/moment-comida-240.webp 240w, /photos/moment-comida-480.webp 480w, /photos/moment-comida-800.webp 800w",
+    "jpg": "/photos/moment-comida-240.jpg 240w, /photos/moment-comida-480.jpg 480w, /photos/moment-comida-800.jpg 800w",
+    "provisional": true,
+    "credit": {
+      "author": "Mojmir Churavy",
+      "title": "Pasta Patate e Provola",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Pasta_Patate_e_Provola.jpg",
+      "changes": "recortada"
+    }
+  },
+  "moment-calle": {
+    "width": 800,
+    "height": 1000,
+    "src": "/photos/moment-calle-480.jpg",
+    "avif": "/photos/moment-calle-240.avif 240w, /photos/moment-calle-480.avif 480w, /photos/moment-calle-800.avif 800w",
+    "webp": "/photos/moment-calle-240.webp 240w, /photos/moment-calle-480.webp 480w, /photos/moment-calle-800.webp 800w",
+    "jpg": "/photos/moment-calle-240.jpg 240w, /photos/moment-calle-480.jpg 480w, /photos/moment-calle-800.jpg 800w",
+    "provisional": true,
+    "credit": {
+      "author": "Jeroen Bennink",
+      "title": "Laundry day in Naples",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:(Explored)_Laundry_day_in_Naples_(6018066134).jpg",
+      "changes": "recortada"
+    }
+  },
+  "moment-concha": {
+    "width": 800,
+    "height": 1000,
+    "src": "/photos/moment-concha-480.jpg",
+    "avif": "/photos/moment-concha-240.avif 240w, /photos/moment-concha-480.avif 480w, /photos/moment-concha-800.avif 800w",
+    "webp": "/photos/moment-concha-240.webp 240w, /photos/moment-concha-480.webp 480w, /photos/moment-concha-800.webp 800w",
+    "jpg": "/photos/moment-concha-240.jpg 240w, /photos/moment-concha-480.jpg 480w, /photos/moment-concha-800.jpg 800w",
+    "provisional": true,
+    "credit": {
+      "author": "Koffermejia",
+      "title": "Concha medio cafe",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Concha_medio_cafe.jpg",
+      "changes": "recortada"
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "_comment": "Fotos fuente (sin EXIF, máx. 2000 px). `npm run images` genera public/photos/* y src/photos.generated.json. provisional=true: foto de reemplazo hasta tener las propias (ver docs/plan-rediseno/PLAN.md §6).",
+  "photos": [
+    {
+      "id": "hero-napoles",
+      "file": "hero-napoles.jpg",
+      "aspect": [
+        4,
+        5
+      ],
+      "position": "centre",
+      "widths": [
+        400,
+        640,
+        960
+      ],
+      "provisional": true,
+      "credit": {
+        "author": "hijirin",
+        "title": "Night view of Napoli",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Night_view_of_Napoli_-_panoramio_(1).jpg",
+        "changes": "recortada"
+      }
+    },
+    {
+      "id": "hero-monterrey",
+      "file": "hero-monterrey.jpg",
+      "aspect": [
+        4,
+        5
+      ],
+      "position": "top",
+      "widths": [
+        320,
+        480,
+        720
+      ],
+      "provisional": true,
+      "credit": {
+        "author": "Matt1220",
+        "title": "Cerro de la Silla Mty NL",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Cerro_de_la_Silla_Mty_NL.jpg",
+        "changes": "recortada"
+      }
+    },
+    {
+      "id": "moment-comida",
+      "file": "moment-comida.jpg",
+      "aspect": [
+        4,
+        5
+      ],
+      "position": "centre",
+      "widths": [
+        240,
+        480,
+        800
+      ],
+      "provisional": true,
+      "credit": {
+        "author": "Mojmir Churavy",
+        "title": "Pasta Patate e Provola",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "source": "https://commons.wikimedia.org/wiki/File:Pasta_Patate_e_Provola.jpg",
+        "changes": "recortada"
+      }
+    },
+    {
+      "id": "moment-calle",
+      "file": "moment-calle.jpg",
+      "aspect": [
+        4,
+        5
+      ],
+      "position": "centre",
+      "widths": [
+        240,
+        480,
+        800
+      ],
+      "provisional": true,
+      "credit": {
+        "author": "Jeroen Bennink",
+        "title": "Laundry day in Naples",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:(Explored)_Laundry_day_in_Naples_(6018066134).jpg",
+        "changes": "recortada"
+      }
+    },
+    {
+      "id": "moment-concha",
+      "file": "moment-concha.jpg",
+      "aspect": [
+        4,
+        5
+      ],
+      "position": "centre",
+      "widths": [
+        240,
+        480,
+        800
+      ],
+      "provisional": true,
+      "credit": {
+        "author": "Koffermejia",
+        "title": "Concha medio cafe",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "source": "https://commons.wikimedia.org/wiki/File:Concha_medio_cafe.jpg",
+        "changes": "recortada"
+      }
+    }
+  ]
+}

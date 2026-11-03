@@ -1,0 +1,457 @@
+/* ───────── Inicio · noche ─────────
+ * Móvil primero: texto, CTA y luego las dos ventanas (Nápoles / Monterrey)
+ * asomando bajo el pliegue. Escritorio: dos columnas con composición propia. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: calc(var(--header-h) + env(safe-area-inset-top) + var(--s-3)) var(--gutter) var(--s-8);
+}
+
+/* Luz ambiental: dos radiales, sin filtros ni desenfoques. */
+.hero__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 38% at 80% 74%, var(--glow-blue), transparent 72%),
+    radial-gradient(60% 30% at 0% 22%, var(--glow-violet), transparent 70%);
+}
+
+.hero__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  gap: var(--s-7);
+}
+
+.hero__text {
+  max-width: 36rem;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font: 600 0.8125rem/1.3 var(--sans);
+  letter-spacing: 0.04em;
+  color: var(--on-night-2);
+}
+.hero__eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--on-night-2);
+}
+
+.hero__title {
+  margin-top: var(--s-4);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.625rem, 1.2rem + 7vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  color: var(--on-night);
+  text-wrap: balance;
+}
+
+/* Cada palabra vive en su propia máscara para subir desde abajo. */
+.w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.08em 0 0.1em;
+  margin: -0.08em 0 -0.1em;
+}
+.w__in {
+  display: inline-block;
+}
+
+.hero__who {
+  margin-top: var(--s-2);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.625rem, 1rem + 3.2vw, 2rem);
+  line-height: 1.2;
+  color: var(--on-night-1);
+}
+
+/* A quién extrañas: los elementos se apilan en la misma celda. */
+.cycle {
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.cycle__item {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+.cycle__item:not(.is-active) {
+  visibility: hidden;
+}
+
+.hero__lede {
+  margin-top: var(--s-5);
+  max-width: 34ch;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--on-night-1);
+}
+
+.hero__actions {
+  margin-top: var(--s-6);
+}
+.hero__actions .btn--primary {
+  width: 100%;
+}
+.hero__note {
+  margin-top: var(--s-3);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--on-night-2);
+}
+
+/* ───────── Las dos ventanas ─────────
+ * Rejilla con una columna compartida para que Monterrey monte un poco sobre
+ * Nápoles. El desfase vertical usa unidades del contenedor (cqw). */
+.places {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 30rem;
+  display: grid;
+  grid-template-columns: 54fr 8fr 38fr;
+  align-items: start;
+}
+.place--far {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+/* Monterrey va por encima del hilo: el hilo pasa por detrás de la foto. */
+.place--near {
+  position: relative;
+  z-index: 2;
+  grid-column: 2 / 4;
+  grid-row: 1;
+  margin-top: 50cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.place__photo {
+  border-radius: var(--r-photo);
+  overflow: hidden;
+  background: var(--night-2);
+  box-shadow: var(--shadow-photo);
+}
+.place__photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.place--near .place__photo {
+  outline: 6px solid var(--night);
+}
+
+.place__tag {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--night-2);
+  box-shadow: inset 0 0 0 1px var(--night-line);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  --box-bg: var(--night-2);
+}
+.place__city {
+  font-weight: 600;
+  color: var(--on-night);
+}
+.place__time {
+  color: var(--on-night-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.places__distance {
+  grid-column: 1 / 4;
+  grid-row: 2;
+  justify-self: end;
+  margin-top: var(--s-3);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: right;
+  color: var(--on-night-2);
+}
+
+/* El hilo entre las dos ventanas (encima de las fotos). */
+.hero-thread {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.hero-thread__glow,
+.hero-thread__line {
+  fill: none;
+  stroke-linecap: round;
+}
+.hero-thread__glow {
+  stroke: var(--thread-glow);
+  stroke-width: 7;
+}
+.hero-thread__line {
+  stroke: var(--thread);
+  stroke-width: 2;
+}
+.hero-thread__knot {
+  fill: var(--thread);
+  stroke: var(--night);
+  stroke-width: 2.5;
+}
+
+/* ───────── Tablet ───────── */
+@media (min-width: 600px) {
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-5);
+  }
+  .hero__actions .btn--primary {
+    width: auto;
+  }
+  .hero__note {
+    margin-top: 0;
+    max-width: 30ch;
+  }
+  .places {
+    max-width: 34rem;
+    justify-self: end;
+  }
+}
+
+/* ───────── Escritorio: composición propia ───────── */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: min(100svh, 980px);
+    display: grid;
+    align-items: center;
+    padding-bottom: var(--s-8);
+  }
+  .hero__glow {
+    background:
+      radial-gradient(42% 46% at 74% 48%, var(--glow-blue), transparent 70%),
+      radial-gradient(40% 40% at 22% 96%, var(--glow-violet), transparent 70%);
+  }
+  .hero__inner {
+    width: 100%;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+    gap: var(--s-8);
+  }
+  .hero__title {
+    font-size: clamp(3.75rem, 1rem + 4.4vw, 5.5rem);
+  }
+  .hero__who {
+    font-size: clamp(2rem, 1rem + 1.4vw, 2.5rem);
+  }
+  .hero__lede {
+    font-size: 1.1875rem;
+  }
+  /* Cabe completa en pantallas bajas (1280 × 720). */
+  .places {
+    max-width: min(40rem, calc(100svh - 260px));
+    justify-self: end;
+    grid-template-columns: 56fr 6fr 38fr;
+  }
+  .place--near {
+    margin-top: 44cqw;
+  }
+}
+
+/* ───────── Entrada ─────────
+ * Todo el contenido es visible sin JS y con «reducir movimiento». Solo con
+ * `.motion-ready` (script en línea de index.html) la animación lo descubre.
+ * El CTA es clicable desde el primer cuadro: la opacidad no bloquea el toque. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-ready .hero__glow {
+    animation: fade-in 1200ms ease-out both;
+  }
+  .motion-ready .hero__eyebrow {
+    animation: rise-in 700ms var(--ease-out) 100ms both;
+  }
+  .motion-ready .w__in {
+    animation: word-rise 900ms var(--ease-out) both;
+    animation-delay: calc(150ms + var(--i, 0) * 80ms);
+  }
+  .motion-ready .hero__who,
+  .motion-ready .hero__lede {
+    animation: rise-in 700ms var(--ease-out) 450ms both;
+  }
+  .motion-ready .hero__actions {
+    animation: rise-in 600ms var(--ease-out) 550ms both;
+  }
+  .motion-ready .place--far .place__photo {
+    animation: mask-up var(--dur-reveal) var(--ease-reveal) 300ms both;
+  }
+  .motion-ready .place--near .place__photo {
+    animation: mask-down var(--dur-reveal) var(--ease-reveal) 450ms both;
+  }
+  .motion-ready .hero-thread__glow,
+  .motion-ready .hero-thread__line {
+    stroke-dasharray: 1 1;
+    animation: draw 1000ms var(--ease-out) 900ms both;
+  }
+  .motion-ready .hero-thread__knot {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: knot 360ms var(--ease-out) both;
+  }
+  .motion-ready .hero-thread__knot--a {
+    animation-delay: 850ms;
+  }
+  .motion-ready .hero-thread__knot--b {
+    animation-delay: 1800ms;
+  }
+  /* Cortina: la caja crece y luego se retira, descubriendo el texto. */
+  .motion-ready .place__tag {
+    animation: curtain-clip var(--dur-reveal) var(--ease-reveal) both;
+  }
+  .motion-ready .place__tag::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--box-bg);
+    transform-origin: right center;
+    animation: curtain-block var(--dur-reveal) var(--ease-reveal) both;
+  }
+  .motion-ready .place--far .place__tag,
+  .motion-ready .place--far .place__tag::after {
+    animation-delay: 1100ms;
+  }
+  .motion-ready .place--near .place__tag,
+  .motion-ready .place--near .place__tag::after {
+    animation-delay: 1250ms;
+  }
+  .motion-ready .places__distance {
+    animation: fade-in 900ms ease-out 1500ms both;
+  }
+
+  /* A quién: el anterior sale hacia arriba y el nuevo entra desde abajo. */
+  .cycle.is-cycling .cycle__item {
+    visibility: visible;
+    animation: cycle-out var(--dur-cycle) var(--ease-reveal) both;
+  }
+  .cycle.is-cycling .cycle__item.is-active {
+    animation-name: cycle-in;
+  }
+}
+
+/* Deriva lenta de la luz, solo en escritorio y sin filtros. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+  .motion-ready .hero__glow {
+    animation:
+      fade-in 1200ms ease-out both,
+      drift 24s ease-in-out 1200ms infinite alternate;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes word-rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+/* El recorte final sobresale: así no corta el borde ni la sombra de la foto. */
+@keyframes mask-up {
+  from {
+    clip-path: inset(100% -24px -48px -24px);
+  }
+  to {
+    clip-path: inset(-24px -24px -48px -24px);
+  }
+}
+@keyframes mask-down {
+  from {
+    clip-path: inset(-24px -24px 100% -24px);
+  }
+  to {
+    clip-path: inset(-24px -24px -48px -24px);
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes knot {
+  from {
+    transform: scale(0);
+  }
+}
+@keyframes curtain-clip {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  50%,
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes curtain-block {
+  from,
+  50% {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes cycle-in {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes cycle-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-110%);
+  }
+}
+@keyframes drift {
+  to {
+    transform: translate3d(-2%, 1.5%, 0);
+  }
+}

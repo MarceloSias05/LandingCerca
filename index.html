@@ -3,18 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#FAF6EE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0F1124" />
     <title>%BRAND_NAME% · Para sentir cerca a quien está lejos</title>
     <meta
       name="description"
-      content="%BRAND_NAME% es una app para iPhone para compartir pequeños momentos y sentir cerca a esa persona, aunque esté lejos. Únete a la lista de espera."
+      content="%BRAND_NAME% es una app para iPhone, en desarrollo, para compartir los pequeños momentos del día con las personas que quieres, aunque vivan lejos. Únete a la lista de espera."
     />
     <meta property="og:title" content="%BRAND_NAME% · Para sentir cerca a quien está lejos" />
     <meta
       property="og:description"
-      content="Un espacio para compartir pequeños momentos y sentir cerca a esa persona, aunque esté lejos."
+      content="Una app para compartir los pequeños momentos del día con las personas que quieres, aunque vivan lejos."
     />
+    <!-- La foto principal (LCP) empieza a bajar antes de que corra el JS. -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      imagesrcset="/photos/hero-napoles-400.avif 400w, /photos/hero-napoles-640.avif 640w, /photos/hero-napoles-960.avif 960w"
+      imagesizes="(min-width: 1024px) 400px, min(62vw, 300px)"
+      fetchpriority="high"
+    />
+    <script>
+      // La entrada animada solo se activa si no se pide reducir movimiento; sin
+      // esta clase (o sin JS) todo el contenido se ve en su estado final.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion-ready')
+    </script>
   </head>
   <body>
     <div id="root"></div>

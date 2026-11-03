@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+import './styles/index.css'
 import App from './App.tsx'
 import { track } from './analytics'
 import { SIGNUP_MESSAGE, SIGNUP_PARAM, SIGNUP_VALUE } from './config'
@@ -11,11 +11,6 @@ import { LangProvider } from './LangProvider'
 const params = new URLSearchParams(window.location.search)
 const confirmed = params.get(SIGNUP_PARAM) === SIGNUP_VALUE
 const root = document.getElementById('root')!
-
-// Oculta solo lo que la entrada animada va a revelar; motion.ts lo quita siempre.
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.documentElement.classList.add('js-motion')
-}
 
 if (confirmed && window.parent !== window) {
   // Jotform redirigió a esta página dentro del iframe del modal: avisa a la

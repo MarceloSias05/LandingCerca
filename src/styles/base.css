@@ -1,0 +1,311 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+ul,
+dl,
+dd {
+  margin: 0;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+/* Foco visible en noche y en día: cada sección define --focus. */
+:root {
+  --focus: var(--ink);
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--on-night);
+  color: var(--night);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -80px;
+  z-index: 100;
+  padding: 12px 18px;
+  border-radius: var(--r-pill);
+  background: var(--on-night);
+  color: var(--night);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ───────── Botones ───────── */
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: var(--r-pill);
+  font: 600 1rem/1.15 var(--sans);
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform var(--dur-micro) var(--ease-out),
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+/* Primario: papel sobre noche, tinta sobre papel. Nunca rojo. */
+.btn--primary {
+  min-height: 52px;
+  padding: 14px 28px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.on-night .btn--primary {
+  background: var(--on-night);
+  color: var(--night);
+}
+.btn--small {
+  min-height: 44px;
+  padding: 0 18px;
+  background: transparent;
+  color: inherit;
+  box-shadow: inset 0 0 0 1px currentColor;
+  font-size: 0.9375rem;
+}
+.btn--ghost {
+  min-height: 46px;
+  padding: 0 20px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background: #34303a;
+  }
+  .on-night .btn--primary:hover {
+    background: #fff;
+  }
+  .btn--small:hover {
+    background: rgb(127 127 127 / 0.16);
+  }
+  .btn--ghost:hover {
+    background: #e7dfd1;
+  }
+}
+
+.icon-btn {
+  appearance: none;
+  border: 0;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--paper-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.icon-btn:active {
+  transform: scale(0.94);
+}
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ───────── Secciones de noche ───────── */
+.on-night {
+  --focus: var(--on-night);
+  background: var(--night);
+  color: var(--on-night);
+}
+
+/* ───────── Encabezado ───────── */
+.site-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 10;
+  height: var(--header-h);
+  padding: 0 var(--gutter);
+  padding-top: env(safe-area-inset-top);
+  color: var(--on-night);
+  --focus: var(--on-night);
+}
+.site-header__inner {
+  max-width: var(--max);
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+.site-header__end {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+/* En móvil el CTA del inicio ya está a la vista; el del encabezado aparece desde tablet. */
+.site-header__cta {
+  display: none;
+}
+@media (min-width: 600px) {
+  .site-header__cta {
+    display: inline-flex;
+  }
+}
+
+.wordmark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font: 700 0.9375rem/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-decoration: none;
+}
+/* Un tramo de hilo bajo el nombre: el mismo gesto del icono de la app. */
+.wordmark::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  bottom: 8px;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--thread);
+}
+
+.lang-switch {
+  display: inline-flex;
+  border-radius: var(--r-pill);
+  box-shadow: inset 0 0 0 1px var(--night-line);
+}
+.lang-switch button {
+  appearance: none;
+  border: 0;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--on-night-2);
+  font: 600 0.8125rem/1 var(--sans);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-micro) ease,
+    color var(--dur-micro) ease;
+}
+.lang-switch button[aria-pressed='true'] {
+  background: var(--on-night);
+  color: var(--night);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lang-switch button[aria-pressed='false']:hover {
+    color: var(--on-night);
+  }
+}
+
+/* ───────── Pie (día) ───────── */
+.site-footer {
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-8) var(--gutter) calc(var(--s-7) + env(safe-area-inset-bottom));
+  font-size: 0.875rem;
+}
+.site-footer__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  gap: var(--s-4);
+}
+.site-footer .wordmark {
+  color: var(--ink);
+}
+.site-footer p {
+  max-width: 68ch;
+}
+.credits {
+  display: grid;
+  gap: var(--s-1);
+}
+.credits a {
+  color: var(--ink);
+}

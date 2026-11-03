@@ -1,84 +1,153 @@
 import { BRAND_NAME } from './brand'
-import type { ArtName } from './components/Art'
 
-// Todos los textos de la página, en español (México) e inglés. Cambia aquí el
-// copy; la estructura (orden, ilustraciones, colores) vive en content.ts.
+// Todos los textos de la página, en español (México) e inglés. El inglés se
+// escribe aparte, no se traduce palabra por palabra. La estructura (orden,
+// fotos, fechas de ejemplo) vive en content.ts.
+//
+// Reglas: solo se anuncian funciones confirmadas (compartir momentos, línea
+// del tiempo, mapa, calendario, perfil). Sin fechas, cifras ni testimonios.
+// Monterrey no cambia de horario e Italia sí: 7 h de diferencia en invierno,
+// 8 h en verano. Los ejemplos usan horario de invierno.
 
 const es = {
   htmlLang: 'es-MX',
   quote: (text: string) => `«${text}»`,
   meta: {
     title: `${BRAND_NAME} · Para sentir cerca a quien está lejos`,
-    description: `${BRAND_NAME} es una app para iPhone para compartir pequeños momentos con quien está lejos y sentirle cerca. Únete a la lista de espera.`,
+    description: `${BRAND_NAME} es una app para iPhone, en desarrollo, para compartir los pequeños momentos del día con las personas que quieres, aunque vivan lejos. Únete a la lista de espera.`,
   },
   lang: { label: 'Idioma', es: 'Español', en: 'English' },
   skip: 'Saltar al contenido',
   home: `${BRAND_NAME}, inicio`,
   headerCta: 'Lista de espera',
+
   hero: {
+    eyebrow: 'App para iPhone · en desarrollo',
     title: '¿Extrañas tu casa?',
-    turn: 'Hay kilómetros entre ustedes. Que no se sientan en todo.',
-    lede: `${BRAND_NAME} es una app para compartir los pequeños momentos del día con esa persona que está lejos, y sentirla cerca.`,
-    cta: 'Quiero estar cerca',
-    ctaNote: 'Únete a la lista de espera.',
-    platform: 'Para iPhone, en español e inglés. En desarrollo.',
-    farTime: '9:20 p. m.',
-    nearTime: '1:20 p. m.',
-    postmark: `${BRAND_NAME} · DE AQUÍ PARA ALLÁ · `,
-    coords: '25°40′N 100°18′O · 40°51′N 14°16′E',
-    scroll: 'sigue el hilo',
-  },
-  zoom: {
-    top: 'Todos los días',
-    bottom: 'pasa algo',
-    rest: 'que quisieras contarle a alguien.',
-  },
-  bridge: `Con ${BRAND_NAME}, esos momentos le llegan a la persona en la que pensabas, del otro lado del hilo.`,
-  postcardIntro: {
-    title: 'Explora la postal',
-    text: `Así se siente ${BRAND_NAME}: lo que vive uno le llega al otro. Toca una foto para abrir un momento, o gira la postal para ver dónde está cada quien.`,
-  },
-  midCta: {
-    question: '¿Hay alguien con quien quisieras compartir así?',
-    cta: 'Quiero estar cerca',
-    note: 'Únete a la lista de espera.',
-  },
-  benefit: {
-    title: 'Compartir lo pequeño también es estar presente.',
-    text: 'Lo que se mandan se queda guardado: una historia de los dos que se va llenando, aunque vivan en horarios distintos.',
-    line: 'Momentos de la postal',
-  },
-  final: {
-    mark: 'aquí se encuentran',
-    title: 'Lo próximo que compartan puede empezar aquí.',
-    text: `Únete a la lista de espera de ${BRAND_NAME} y recibe novedades sobre su lanzamiento.`,
+    /** Rota en pantalla; el lector de pantalla oye `whoLabel`. */
+    who: ['¿A tu mamá?', '¿A tu hermano?', '¿A tu pareja?', '¿A tus amigos?'],
+    whoLabel: '¿A tu mamá, a tu hermano, a tu pareja, a tus amigos?',
+    lede: `${BRAND_NAME} es una app para compartir los pequeños momentos del día con las personas que quieres, aunque vivan lejos.`,
     cta: 'Unirme a la lista de espera',
-    postmarkRing: `LISTA DE ESPERA · ${BRAND_NAME} · `,
-    postmarkCenter: 'AQUÍ',
+    ctaNote: 'Te escribiremos solo para contarte novedades del lanzamiento.',
+    placesLabel: 'Dos lugares unidos por el hilo',
+    far: {
+      city: 'Nápoles',
+      time: '9:20 p. m.',
+      alt: 'Nápoles de noche desde lo alto: azoteas y calles iluminadas',
+    },
+    near: {
+      city: 'Monterrey',
+      time: '2:20 p. m.',
+      alt: 'Una tarde en Monterrey: el Cerro de la Silla detrás de árboles y edificios',
+    },
+    distance: '10,008 km y 7 u 8 horas de diferencia, según la temporada',
   },
-  footer:
-    'Una app para iPhone, en desarrollo, en español e inglés. Las imágenes son ilustraciones provisionales; las personas, horas y mensajes de la postal son datos de demostración.',
-  postcard: {
-    sides: 'Lados de la postal',
-    moments: 'Momentos',
-    map: 'Mapa',
-    flip: 'Girar postal',
-    pair: (a: string, b: string) => `${a} y ${b}`,
-    sample: 'Momentos de ejemplo · datos de demostración',
-    openMoment: (label: string, name: string) => `Abrir momento: ${label}, de ${name}`,
-    tapHint: 'toca una foto',
-    seeMap: 'Ver mapa',
-    seeMoments: 'Ver momentos',
-    momentRegion: (label: string) => `Momento: ${label}`,
-    arrived: (city: string) => `llegó hasta ${city}`,
-    back: 'Volver a la postal',
-    mapTag: 'Mapa ilustrativo · datos de demostración',
-    mapLabel: (a: string, b: string) => `Mapa: ${a} y ${b} unidos por el hilo rojo`,
-    here: 'Aquí',
-    there: 'Allá',
-    hours: (h: number) => `y ${h} horas de diferencia`,
-    sameThread: 'y un mismo hilo',
+
+  everyday: {
+    title: 'No son grandes noticias.',
+    text: 'Son las cosas que le contarías si estuviera aquí.',
+    sample: 'Ejemplo: Valeria estudia en Nápoles; su mamá vive en Monterrey.',
+    hint: '¿Para quién?',
+    moments: {
+      comida: {
+        quote: 'Tienes que probar esto.',
+        alt: 'Un plato de pasta con papa y queso provola',
+        meta: 'Nápoles · 2:10 p. m.',
+        to: 'De Valeria para Mamá',
+        there: 'En Monterrey eran las 7:10 a. m.',
+      },
+      calle: {
+        quote: 'Esto me hizo pensar en ti.',
+        alt: 'Un callejón de Nápoles con ropa tendida entre los balcones',
+        meta: 'Nápoles · 8:40 a. m., camino a clase',
+        to: 'De Valeria para Mamá',
+        there: 'En Monterrey era la 1:40 a. m.',
+      },
+      concha: {
+        quote: 'Te guardé una concha.',
+        alt: 'Una concha de pan dulce en un tazón sobre un mantel',
+        meta: 'Monterrey · 6:30 p. m.',
+        to: 'De Mamá para Valeria',
+        there: 'En Nápoles era la 1:30 a. m.',
+      },
+    },
   },
+
+  how: {
+    title: 'Así funciona',
+    steps: [
+      { title: 'Toma una foto y escribe una línea.', text: 'Lo que estás viendo, en el momento en que pasa.' },
+      { title: 'Le llega a tu persona.', text: 'No tienen que coincidir: lo ve cuando pueda, en su horario.' },
+      {
+        title: 'Se queda en lo de los dos.',
+        text: 'Cada momento se guarda en su línea del tiempo, en el mapa y en el calendario que comparten.',
+      },
+    ],
+    demoLabel: 'Prototipo en desarrollo · datos de ejemplo',
+    views: 'Vistas de la app',
+    tabs: { timeline: 'Línea del tiempo', map: 'Mapa', calendar: 'Calendario' },
+    screen: {
+      pair: 'Valeria y Mamá',
+      mapTitle: 'Dónde pasó',
+      month: 'Noviembre',
+      weekdays: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
+      day: (d: number) => `${d} de noviembre`,
+      moments: (n: number) => (n === 1 ? '1 momento' : `${n} momentos`),
+      names: { valeria: 'Valeria', mama: 'Mamá' },
+      describe: {
+        timeline: 'Línea del tiempo de ejemplo: los tres momentos de Valeria y Mamá, del más reciente al más antiguo.',
+        map: 'Mapa de ejemplo: un hilo une Monterrey, con un momento, y Nápoles, con dos.',
+        calendar: 'Calendario de ejemplo de noviembre: hay momentos los días 12, 18 y 24.',
+      },
+    },
+  },
+
+  situations: {
+    title: 'Para cuando…',
+    items: [
+      {
+        title: '…sus horarios no coinciden.',
+        text: 'Mandas el momento cuando pasa y tu persona lo ve cuando despierta. Nadie tiene que estar al pendiente del teléfono.',
+      },
+      { title: '…no sabes qué escribir.', text: 'Una foto y una línea bastan para decir «me acordé de ti».' },
+      { title: '…quieres volver a ese día.', text: 'Lo que se mandan queda guardado por fecha y lugar, para los dos.' },
+    ],
+  },
+
+  faq: {
+    title: 'Preguntas',
+    items: [
+      {
+        q: '¿Cuándo sale?',
+        a: 'Todavía no tenemos fecha. Si te unes a la lista de espera, te escribimos cuando haya novedades.',
+      },
+      {
+        q: '¿Es solo para parejas?',
+        a: 'No. Es para tu familia, tus amistades o tu pareja: cualquier persona que quieras sentir cerca.',
+      },
+      { q: '¿Funciona en Android?', a: `Por ahora, ${BRAND_NAME} es solo para iPhone.` },
+      { q: '¿En qué idiomas está?', a: 'En español y en inglés.' },
+      { q: '¿Qué hacen con mi correo?', a: `Solo lo usamos para escribirte sobre el lanzamiento de ${BRAND_NAME}.` },
+    ],
+  },
+
+  join: {
+    title: 'Que lo próximo que compartan empiece aquí.',
+    text: 'Únete a la lista de espera. Te escribiremos cuando haya novedades del lanzamiento; nada más.',
+    cta: 'Unirme a la lista de espera',
+    note: 'La app está en desarrollo y todavía no tiene fecha de lanzamiento.',
+  },
+
+  sticky: { cta: 'Unirme a la lista de espera', label: 'Lista de espera' },
+
+  credits: {
+    title: 'Fotos',
+    provisional: 'Fotos provisionales.',
+    changes: 'recortada',
+  },
+  footer: 'Una app para iPhone, en desarrollo, en español e inglés.',
+
   waitlist: {
     title: `Lista de espera de ${BRAND_NAME}`,
     close: 'Cerrar la lista de espera',
@@ -92,51 +161,6 @@ const es = {
     thanks: `Ya estás en la lista de espera de ${BRAND_NAME}. Te escribiremos cuando haya novedades.`,
     dismiss: 'Cerrar aviso',
   },
-  art: {
-    prefix: 'Ilustración provisional',
-    monterrey: 'Atardecer en Monterrey con el Cerro de la Silla',
-    napoles: 'Vista del mar y el Vesubio desde una ventana en Nápoles',
-    cafe: 'Una taza de café y un cuernito en la mesa',
-    panaderia: 'La fachada de una panadería de barrio',
-    conchas: 'Conchas de pan dulce en un plato',
-    flores: 'Cubetas con flores en un mercado',
-    lluvia: 'Lluvia en la ventana y una taza en el alféizar',
-  } satisfies Record<ArtName | 'prefix', string>,
-  people: {
-    valeria: { name: 'Valeria', city: 'Nápoles', country: 'Italia' },
-    mama: { name: 'Mamá', city: 'Monterrey', country: 'México' },
-  },
-  stations: {
-    ensenar: {
-      kicker: 'algo que querías enseñarle',
-      phrase: 'Tienes que probar esto.',
-      meta: 'Domingo, 9:12 a. m.',
-    },
-    recordar: {
-      kicker: 'un lugar que te recordó a alguien',
-      phrase: 'Esto me hizo pensar en ti.',
-      meta: 'Mercado, de camino a casa',
-    },
-    compartir: {
-      kicker: 'un momento pequeño',
-      phrase: 'Ojalá pudieras estar aquí.',
-      meta: 'Martes, 11:40 p. m.',
-    },
-  },
-  moments: {
-    cafe: { label: 'El desayuno', time: '8:10 a. m.', message: 'Aquí ya amaneció. Te guardé el primer sorbo.' },
-    panaderia: {
-      label: 'La panadería',
-      time: '6:30 p. m.',
-      message: 'Pasé por la panadería de siempre y me acordé de ti.',
-    },
-    ventana: { label: 'Mi ventana', time: '9:45 p. m.', message: 'La vista desde mi cuarto. Ya casi me duermo.' },
-    cerro: {
-      label: 'El atardecer',
-      time: '7:05 p. m.',
-      message: 'Así se veía el Cerro de la Silla hoy. Te lo mando.',
-    },
-  },
   signupInFrame: `¡Listo! Ya estás en la lista de espera de ${BRAND_NAME}.`,
 }
 
@@ -147,76 +171,136 @@ const en: Copy = {
   quote: (text) => `“${text}”`,
   meta: {
     title: `${BRAND_NAME} · Feel close to the people far away`,
-    description: `${BRAND_NAME} is an iPhone app for sharing small moments with someone far away, so they feel close. Join the waitlist.`,
+    description: `${BRAND_NAME} is an iPhone app in development for sharing the small moments of your day with the people you love, even when they live far away. Join the waitlist.`,
   },
   lang: { label: 'Language', es: 'Español', en: 'English' },
   skip: 'Skip to content',
   home: `${BRAND_NAME}, home`,
   headerCta: 'Waitlist',
+
   hero: {
+    eyebrow: 'iPhone app · in development',
     title: 'Feeling homesick?',
-    turn: 'Miles apart doesn’t have to feel that way.',
-    lede: `${BRAND_NAME} is an app for sharing the small moments of your day with the person who’s far away, so they feel close.`,
-    cta: 'Bring me closer',
-    ctaNote: 'Join the waitlist.',
-    platform: 'For iPhone, in English and Spanish. In development.',
-    farTime: '9:20 PM',
-    nearTime: '1:20 PM',
-    postmark: `${BRAND_NAME} · FROM HERE TO THERE · `,
-    coords: '25°40′N 100°18′W · 40°51′N 14°16′E',
-    scroll: 'follow the thread',
-  },
-  zoom: {
-    top: 'Every day',
-    bottom: 'something happens',
-    rest: 'you’d want to tell someone about.',
-  },
-  bridge: `With ${BRAND_NAME}, those moments reach the person you were thinking of, at the other end of the thread.`,
-  postcardIntro: {
-    title: 'Explore the postcard',
-    text: `This is how ${BRAND_NAME} feels: what one of you lives reaches the other. Tap a photo to open a moment, or flip the postcard to see where each of you is.`,
-  },
-  midCta: {
-    question: 'Is there someone you’d like to share with like this?',
-    cta: 'Bring me closer',
-    note: 'Join the waitlist.',
-  },
-  benefit: {
-    title: 'Sharing the small things is a way of being there.',
-    text: 'What you send each other stays saved: a story of the two of you that keeps filling up, even across time zones.',
-    line: 'Moments from the postcard',
-  },
-  final: {
-    mark: 'where you meet',
-    title: 'The next thing you share could start here.',
-    text: `Join the ${BRAND_NAME} waitlist and get news about the launch.`,
+    who: ['Missing your mom?', 'Missing your brother?', 'Missing your partner?', 'Missing your friends?'],
+    whoLabel: 'Missing your mom, your brother, your partner, your friends?',
+    lede: `${BRAND_NAME} is an app for sharing the small moments of your day with the people you love, even when they live far away.`,
     cta: 'Join the waitlist',
-    postmarkRing: `WAITLIST · ${BRAND_NAME} · `,
-    postmarkCenter: 'HERE',
+    ctaNote: 'We’ll only write to tell you about the launch.',
+    placesLabel: 'Two places joined by the thread',
+    far: {
+      city: 'Naples',
+      time: '9:20 PM',
+      alt: 'Naples at night from above: rooftops and lit streets',
+    },
+    near: {
+      city: 'Monterrey',
+      time: '2:20 PM',
+      alt: 'An afternoon in Monterrey: Cerro de la Silla behind trees and buildings',
+    },
+    distance: '10,008 km and 7 or 8 hours apart, depending on the season',
   },
-  footer:
-    'An iPhone app in development, in English and Spanish. Images are placeholder illustrations; the people, times and messages on the postcard are demo data.',
-  postcard: {
-    sides: 'Sides of the postcard',
-    moments: 'Moments',
-    map: 'Map',
-    flip: 'Flip postcard',
-    pair: (a, b) => `${a} & ${b}`,
-    sample: 'Sample moments · demo data',
-    openMoment: (label, name) => `Open moment: ${label}, from ${name}`,
-    tapHint: 'tap a photo',
-    seeMap: 'See map',
-    seeMoments: 'See moments',
-    momentRegion: (label) => `Moment: ${label}`,
-    arrived: (city) => `made it to ${city}`,
-    back: 'Back to the postcard',
-    mapTag: 'Illustrative map · demo data',
-    mapLabel: (a, b) => `Map: ${a} and ${b} joined by the red thread`,
-    here: 'Here',
-    there: 'There',
-    hours: (h) => `and ${h} hours apart`,
-    sameThread: 'and one shared thread',
+
+  everyday: {
+    title: 'It’s not big news.',
+    text: 'It’s the things you’d tell them if they were here.',
+    sample: 'Example: Valeria studies in Naples; her mom lives in Monterrey.',
+    hint: 'Who’s it for?',
+    moments: {
+      comida: {
+        quote: 'You have to try this.',
+        alt: 'A plate of pasta with potatoes and provola cheese',
+        meta: 'Naples · 2:10 PM',
+        to: 'From Valeria to Mom',
+        there: 'It was 7:10 AM in Monterrey',
+      },
+      calle: {
+        quote: 'This made me think of you.',
+        alt: 'A Naples alley with laundry hanging between the balconies',
+        meta: 'Naples · 8:40 AM, on the way to class',
+        to: 'From Valeria to Mom',
+        there: 'It was 1:40 AM in Monterrey',
+      },
+      concha: {
+        quote: 'I saved you a concha.',
+        alt: 'A concha, Mexican sweet bread, in a bowl on a tablecloth',
+        meta: 'Monterrey · 6:30 PM',
+        to: 'From Mom to Valeria',
+        there: 'It was 1:30 AM in Naples',
+      },
+    },
   },
+
+  how: {
+    title: 'How it works',
+    steps: [
+      { title: 'Take a photo and write one line.', text: 'Whatever you’re looking at, right when it happens.' },
+      { title: 'It reaches your person.', text: 'No need to be awake at the same time: they see it when they can.' },
+      {
+        title: 'It stays in what you share.',
+        text: 'Every moment is saved to your shared timeline, map and calendar.',
+      },
+    ],
+    demoLabel: 'Prototype in development · sample data',
+    views: 'App views',
+    tabs: { timeline: 'Timeline', map: 'Map', calendar: 'Calendar' },
+    screen: {
+      pair: 'Valeria & Mom',
+      mapTitle: 'Where it happened',
+      month: 'November',
+      weekdays: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      day: (d) => `November ${d}`,
+      moments: (n) => (n === 1 ? '1 moment' : `${n} moments`),
+      names: { valeria: 'Valeria', mama: 'Mom' },
+      describe: {
+        timeline: 'Sample timeline: Valeria and Mom’s three moments, newest first.',
+        map: 'Sample map: a thread joins Monterrey, with one moment, and Naples, with two.',
+        calendar: 'Sample November calendar: there are moments on the 12th, 18th and 24th.',
+      },
+    },
+  },
+
+  situations: {
+    title: 'For when…',
+    items: [
+      {
+        title: '…your schedules don’t line up.',
+        text: 'You send the moment as it happens and they see it when they wake up. Nobody has to stay glued to their phone.',
+      },
+      { title: '…you don’t know what to say.', text: 'A photo and one line are enough to say “I thought of you.”' },
+      { title: '…you want to go back to that day.', text: 'What you send each other stays saved by date and place, for both of you.' },
+    ],
+  },
+
+  faq: {
+    title: 'Questions',
+    items: [
+      { q: 'When is it coming out?', a: 'We don’t have a date yet. Join the waitlist and we’ll write when there’s news.' },
+      {
+        q: 'Is it just for couples?',
+        a: 'No. It’s for your family, your friends or your partner: anyone you want to feel close to.',
+      },
+      { q: 'Does it work on Android?', a: `For now, ${BRAND_NAME} is iPhone only.` },
+      { q: 'What languages is it in?', a: 'English and Spanish.' },
+      { q: 'What do you do with my email?', a: `We only use it to write to you about the ${BRAND_NAME} launch.` },
+    ],
+  },
+
+  join: {
+    title: 'The next thing you share could start here.',
+    text: 'Join the waitlist. We’ll write when there’s launch news, and that’s it.',
+    cta: 'Join the waitlist',
+    note: 'The app is in development and doesn’t have a launch date yet.',
+  },
+
+  sticky: { cta: 'Join the waitlist', label: 'Waitlist' },
+
+  credits: {
+    title: 'Photos',
+    provisional: 'Placeholder photos.',
+    changes: 'cropped',
+  },
+  footer: 'An iPhone app in development, in English and Spanish.',
+
   waitlist: {
     title: `${BRAND_NAME} waitlist`,
     close: 'Close the waitlist',
@@ -229,51 +313,6 @@ const en: Copy = {
     thanksLead: 'Done!',
     thanks: `You’re on the ${BRAND_NAME} waitlist. We’ll write when there’s news.`,
     dismiss: 'Close notice',
-  },
-  art: {
-    prefix: 'Placeholder illustration',
-    monterrey: 'Sunset in Monterrey with Cerro de la Silla',
-    napoles: 'The sea and Vesuvius seen from a window in Naples',
-    cafe: 'A cup of coffee and a croissant on the table',
-    panaderia: 'The front of a neighborhood bakery',
-    conchas: 'Conchas, Mexican sweet bread, on a plate',
-    flores: 'Buckets of flowers at a market',
-    lluvia: 'Rain on the window and a mug on the sill',
-  },
-  people: {
-    valeria: { name: 'Valeria', city: 'Naples', country: 'Italy' },
-    mama: { name: 'Mom', city: 'Monterrey', country: 'Mexico' },
-  },
-  stations: {
-    ensenar: {
-      kicker: 'something you wanted to show them',
-      phrase: 'You have to try this.',
-      meta: 'Sunday, 9:12 AM',
-    },
-    recordar: {
-      kicker: 'a place that reminded you of someone',
-      phrase: 'This made me think of you.',
-      meta: 'Market, on the way home',
-    },
-    compartir: {
-      kicker: 'a small moment',
-      phrase: 'Wish you were here.',
-      meta: 'Tuesday, 11:40 PM',
-    },
-  },
-  moments: {
-    cafe: { label: 'Breakfast', time: '8:10 AM', message: 'It’s morning here. I saved you the first sip.' },
-    panaderia: {
-      label: 'The bakery',
-      time: '6:30 PM',
-      message: 'Stopped by our usual bakery and thought of you.',
-    },
-    ventana: { label: 'My window', time: '9:45 PM', message: 'The view from my room. Almost bedtime.' },
-    cerro: {
-      label: 'The sunset',
-      time: '7:05 PM',
-      message: 'Cerro de la Silla looked like this today. Sending it your way.',
-    },
   },
   signupInFrame: `Done! You’re on the ${BRAND_NAME} waitlist.`,
 }

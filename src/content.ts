@@ -1,34 +1,33 @@
-import type { ArtName } from './components/Art'
+import type { PhotoId } from './components/Photo'
 import type { Copy } from './copy'
 
-// Estructura de la demostración: orden, ilustración y color de cada pieza.
-// Los textos (en español e inglés) viven en copy.ts. Personas, horas y mensajes
-// son ejemplos para explicar la app. La distancia Monterrey–Nápoles (≈10,008 km,
-// 8 h de diferencia en horario de invierno) es la del resto del material de la marca.
+// Estructura de la demostración. Personas, horas y mensajes son ejemplos para
+// explicar la app (se marcan como tales en la página). La distancia
+// Monterrey–Nápoles (≈10,008 km) es la del resto del material de la marca.
 
-export type Tone = 'sky' | 'butter' | 'sage' | 'pink'
-export type PersonId = keyof Copy['people']
-
-export const STATIONS: { id: keyof Copy['stations']; art: ArtName; tone: Tone }[] = [
-  { id: 'ensenar', art: 'conchas', tone: 'butter' },
-  { id: 'recordar', art: 'flores', tone: 'pink' },
-  { id: 'compartir', art: 'lluvia', tone: 'sky' },
-]
-
-export const DISTANCE = { km: '10,008', hours: 8 }
+export type MomentId = keyof Copy['everyday']['moments']
+export type CityId = 'napoles' | 'monterrey'
 
 export type Moment = {
-  id: keyof Copy['moments']
-  art: ArtName
-  tone: Tone
-  from: PersonId
-  /** Para la versión con fotos reales: ruta a una imagen optimizada (webp/avif). */
-  image?: string
+  id: MomentId
+  photo: PhotoId
+  city: CityId
+  /** Día de noviembre (calendario de ejemplo). */
+  day: number
+  from: 'valeria' | 'mama'
 }
 
+/** En orden de la historia (lo cotidiano); la línea del tiempo los muestra al revés. */
 export const MOMENTS: Moment[] = [
-  { id: 'cafe', art: 'cafe', tone: 'butter', from: 'valeria' },
-  { id: 'panaderia', art: 'panaderia', tone: 'pink', from: 'mama' },
-  { id: 'ventana', art: 'napoles', tone: 'sky', from: 'valeria' },
-  { id: 'cerro', art: 'monterrey', tone: 'sage', from: 'mama' },
+  { id: 'comida', photo: 'moment-comida', city: 'napoles', day: 12, from: 'valeria' },
+  { id: 'calle', photo: 'moment-calle', city: 'napoles', day: 18, from: 'valeria' },
+  { id: 'concha', photo: 'moment-concha', city: 'monterrey', day: 24, from: 'mama' },
 ]
+
+export const CITIES: Record<CityId, { lonLat: [number, number] }> = {
+  monterrey: { lonLat: [-100.31, 25.67] },
+  napoles: { lonLat: [14.27, 40.85] },
+}
+
+/** Noviembre de 2026 empieza en domingo (con la semana de lunes a domingo, 6 huecos). */
+export const CALENDAR = { leadingBlanks: 6, days: 30 }
